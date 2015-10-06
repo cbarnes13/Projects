@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I../Sorting -I. -I../../../Qt/5.5/gcc_64/include -I../../../Qt/5.5/gcc_64/include/QtCore -I. -I../../../Qt/5.5/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/ds/Qt/5.5/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -144,6 +144,7 @@ DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/default_pre.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/default_post.prf \
+		../../../Qt/5.5/gcc_64/mkspecs/features/c++11.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/warn_on.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/qt.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/resources.prf \
@@ -277,6 +278,7 @@ Makefile: ../Sorting/Sorting.pro ../../../Qt/5.5/gcc_64/mkspecs/linux-g++/qmake.
 		../../../Qt/5.5/gcc_64/mkspecs/features/default_pre.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/default_post.prf \
+		../../../Qt/5.5/gcc_64/mkspecs/features/c++11.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/warn_on.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/qt.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/resources.prf \
@@ -381,6 +383,7 @@ Makefile: ../Sorting/Sorting.pro ../../../Qt/5.5/gcc_64/mkspecs/linux-g++/qmake.
 ../../../Qt/5.5/gcc_64/mkspecs/features/default_pre.prf:
 ../../../Qt/5.5/gcc_64/mkspecs/features/resolve_config.prf:
 ../../../Qt/5.5/gcc_64/mkspecs/features/default_post.prf:
+../../../Qt/5.5/gcc_64/mkspecs/features/c++11.prf:
 ../../../Qt/5.5/gcc_64/mkspecs/features/warn_on.prf:
 ../../../Qt/5.5/gcc_64/mkspecs/features/qt.prf:
 ../../../Qt/5.5/gcc_64/mkspecs/features/resources.prf:

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include "sortingcompetition.h"
 using namespace std;
 
 long fibonacci(int n)
