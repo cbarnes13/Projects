@@ -23,10 +23,18 @@ public:
 
 private:
 
-    string largeFile;
-    vector<string> wordList;
-    vector<string> sorter;
-
+    string fileName;
+    char** wordList;
+    char** copy;
+    char* buffer;
+    int listSize;
+    void resize(char**& oldArr, int size);
+    void addWord(char*& word, int wordNum);
+    void bubbleSort();
+    void quickSortMedOfThree(int l, int h);
+    int partition(int low, int high);
+    void selectionSort();
+    void mergeSort();
 };
 
 
