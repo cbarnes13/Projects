@@ -31,8 +31,10 @@ private:
     void resize(char**& oldArr, int size);
     void addWord(char*& word, int wordNum);
     void bubbleSort();
-    void quickSortMedOfThree(int l, int h);
-    int partition(int low, int high);
+    void quickSortPivotLast(int l, int h);
+    int partitionPivotLast(int low, int high);
+    void mergeSort(int l, int h);
+    void merge(int left, int middle, int right);
     void selectionSort();
     void mergeSort();
 };

@@ -7,7 +7,6 @@
 #include <string>
 #include <string.h>
 #include <iomanip>
-#include <algorithm>
 
 using namespace std;
 
@@ -69,10 +68,10 @@ bool SortingCompetition::prepareData()
 
 void SortingCompetition::sortData()
 {
-    //quickSortMedOfThree(0, listSize-1);
+    //mergeSort(0, listSize-1);
+    //quickSortPivotLast(0, listSize-1);
     //selectionSort();
     //bubbleSort();
-    mergeSort();
 }
 
 void SortingCompetition::bubbleSort(){
@@ -94,7 +93,7 @@ void SortingCompetition::bubbleSort(){
             //test to see if the words have same length
             if(strlen(firstTemp) == strlen(secondTemp)){
                 //test for aphabeticaly
-                if(strcmp(firstTemp,secondTemp) > 0){
+                if(strcmp(firstTemp,secondTemp) < 0){
                     //switches words
                     copy[firstVal] = secondTemp;
                     copy[secondVal] = firstTemp;
@@ -104,41 +103,105 @@ void SortingCompetition::bubbleSort(){
     }
 }
 
-void SortingCompetition::quickSortMedOfThree(int l, int h){
+void SortingCompetition::quickSortPivotLast(int l, int h){
+
+    //tests to see if lowest index is less than highest
     if(l < h){
-        int p = partition(l, h);
-        quickSortMedOfThree(l, p-1);
-        quickSortMedOfThree(p+1, h);
+        //sends indexs to partition and returns the pivot index
+        int p = partitionPivotLast(l, h);
+        //recursive call to quicksort for both sides of pivot
+        quickSortPivotLast(l, p-1);
+        quickSortPivotLast(p+1, h);
     }
 }
 
-int SortingCompetition::partition(int low, int high){
+int SortingCompetition::partitionPivotLast(int low, int high){
+    //sets pivot to last index
     char* pivot = copy[high];
+    //varibles that will be used
     char* firstTemp;
-    //char* secondTemp;
-    int i = low-1;
+    int left = low-1;
 
-    for(int j = low; j < high; j++){
-        if(strlen(copy[j]) < strlen(pivot)){
-            i++;
-            firstTemp = copy[i];
-            copy[i] = copy[j];
-            copy[j] = firstTemp;
+    for(int right = low; right < high; right++){
+        if(strlen(copy[right]) < strlen(pivot)){
+            left++;
+            firstTemp = copy[left];
+            copy[left] = copy[right];
+            copy[right] = firstTemp;
         }
-        if(strlen(copy[j]) == strlen(pivot)){
-            if(strcmp(copy[j],pivot) > 0){
-                i++;
-                firstTemp = copy[i];
-                copy[i] = copy[j];
-                copy[j] = firstTemp;
+        if(strlen(copy[right]) == strlen(pivot)){
+            if(strcmp(copy[right],pivot) < 0){
+                left++;
+                firstTemp = copy[left];
+                copy[left] = copy[right];
+                copy[right] = firstTemp;
             }
         }
     }
-    firstTemp = copy[i+1];
-    copy[i+1] = copy[high];
+    firstTemp = copy[left+1];
+    copy[left+1] = copy[high];
     copy[high] = firstTemp;
 
-    return i+1;
+    return left+1;
+}
+
+void SortingCompetition::mergeSort(int l, int h){
+    if(l < h){
+        int middle = l+(h-l)/2;
+        mergeSort(l, middle);
+        mergeSort(middle+1, h);
+        merge(l ,middle, h);
+    }
+}
+
+void SortingCompetition::merge(int left, int middle, int right){
+    int i;
+    int j;
+    int k;
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+    char** tempL = new char*[n1];
+    char** tempR = new char* [n2];
+
+    for(i = 0; i < n1; i++)
+        tempL[i] = copy[left+i];
+    for(j = 0; j < n2; j++)
+        tempR[j] = copy[middle + 1 + j];
+
+    i = 0;
+    j = 0;
+    k = 1;
+
+    while(i < n1 && j < n2){
+        if(strlen(tempL[i]) < strlen(tempR[j])){
+            copy[k] = tempL[i];
+            i++;
+        }
+        if(strlen(tempL[i]) > strlen(tempR[j])){
+            copy[k] = tempR[j];
+            j++;
+        }
+        if(strlen(tempL[i]) == strlen(tempR[j])){
+            if(strcmp(tempL[i], tempR[j]) < 0){
+                copy[k] = tempL[i];
+                i++;
+            } else{
+                copy[k] = tempR[j];
+                j++;
+            }
+        }
+        k++;
+    }
+    while(i < n1){
+        copy[k] = tempL[i];
+        i++;
+        k++;
+    }
+    while(j < n2){
+        copy[k] = tempR[j];
+        j++;
+        k++;
+    }
 }
 
 void SortingCompetition:: selectionSort()
@@ -175,90 +238,6 @@ void SortingCompetition:: selectionSort()
         }
 
     }
-
-}
-
-void SortingCompetition:: mergeSort()
-{
-    int firstHalf = 0;
-    int secondHalf = 0;
-
-
-    if ( (listSize % 2) == 0)
-    {
-        firstHalf = listSize/2;
-        secondHalf = firstHalf;
-    }
-    else
-    {
-        firstHalf = (listSize-1)/2;
-        secondHalf = firstHalf + 1;
-    }
-
-    char** firstHalfTemp = new char*[firstHalf];
-    for (int fht = 0; fht < firstHalf; fht++)
-    {
-        firstHalfTemp[fht] = copy[fht];
-    }
-    sort(firstHalfTemp[0] , firstHalfTemp[firstHalf-1]);
-
-    char** secondHalfTemp = new char*[secondHalf];
-    for (int sht = firstHalf; sht < listSize; sht++)
-    {
-        secondHalfTemp[sht] = copy[sht];
-    }
-    sort(secondHalfTemp[0] , secondHalfTemp[secondHalf-1]);
-
-    //http://mathbits.com/MathBits/CompSci/Arrays/Merge.htm
-
-    int firstCounter = 0;
-    int secondCounter = 0;
-    int finalCounter = 0;
-    char* firstTemp;
-    char* secondTemp;
-
-    while ( (firstCounter < firstHalf) && (secondCounter < secondHalf) )
-    {
-        firstTemp = firstHalfTemp[firstCounter];
-        secondTemp = secondHalfTemp[secondCounter];
-
-        if(strlen(firstTemp) > strlen(secondTemp))
-        {
-            copy[finalCounter] = secondTemp;
-            secondCounter++;
-        }
-
-        else if (strlen(firstTemp) == strlen(secondTemp) && strcmp(firstTemp , secondTemp) < 0 )
-        {
-            copy[finalCounter] = secondTemp;
-            secondCounter++;
-        }
-        else
-        {
-            copy[finalCounter] = firstTemp;
-            firstCounter++;
-        }
-
-        finalCounter++;
-    }
-
-    while (firstCounter < firstHalf)
-    {
-        firstTemp = firstHalfTemp[firstCounter];
-        copy[finalCounter] = firstTemp;
-        firstCounter++;
-        finalCounter++;
-    }
-
-    while (secondCounter < secondHalf)
-    {
-        secondTemp = secondHalfTemp[secondCounter];
-        copy[finalCounter] = secondTemp;
-        secondCounter++;
-        finalCounter++;
-
-    }
-
 
 }
 
