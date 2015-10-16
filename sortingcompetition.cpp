@@ -1,4 +1,4 @@
-#include <sortingcompetition.h>
+#include "sortingcompetition.h"
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
