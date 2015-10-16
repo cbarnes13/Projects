@@ -12,7 +12,8 @@ long fibonacci(int n)
 
 int main(int argc, char* argv[]) {
 
-    if(argc == 3){
+    if(argc == 3)
+    {
         SortingCompetition *sort = new SortingCompetition(argv[1]);
         sort->readData();
         sort->prepareData();
