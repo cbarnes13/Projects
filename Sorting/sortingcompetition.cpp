@@ -66,14 +66,16 @@ bool SortingCompetition::readData()
 
 }
 
-void SortingCompetition::addWord(char *&word, int wordNum){
+void SortingCompetition::addWord(char *&word, int wordNum)
+{
     //adds word to char array
     wordList[wordNum] = new char[strlen(word)+1];
     strcpy(wordList[wordNum],word);
     wordList[wordNum][strlen(word)] = '\0';
 }
 
-void SortingCompetition::resize(char **&oldArr, int size){
+void SortingCompetition::resize(char **&oldArr, int size)
+{
     //resizes char array
     char** temp = new char*[size+1000];
     for(int counter = 0; counter < size; counter++)
@@ -97,13 +99,12 @@ void SortingCompetition::sortData()
     //uncomment which sort method you would
     //like to use
 
+    quickSortPivotLast(0, listSize-1);
     //quickSortMedOfFive(0, listSize-1);
     //quickSortMedOfThree(0, listSize-1);
-    //quickSortPivotLast(0, listSize-1);
     //quickSortPivotFirst(0, listSize-1);
     //selectionSort();
     //bubbleSort();
-    //mergeSort(0, listSize-1);
 }
 
 void SortingCompetition:: selectionSort()
@@ -116,25 +117,30 @@ void SortingCompetition:: selectionSort()
 
     for ( int i = 0; i < (listSize - 1); i++)
     {
+        //set min_index
         min_index = i;
 
         for ( int j = (i+1); j < listSize; j++)
         {
+            //sets temps
             firstTemp = copy[min_index];
             secondTemp = copy[j];
-
+            //compares length
             if(strlen(firstTemp) > strlen(secondTemp)){
+                //sets min_index
                 min_index = j;
             }
-
+            //determines alphabetical order
             else if (strlen(firstTemp) == strlen(secondTemp) && strcmp(copy[j] , copy[min_index]) < 0 )
             {
+                //set min_index
                 min_index = j;
             }
         }
-
+        //tests to see if min_index is no equal to i
         if (min_index != i)
         {
+            //swap values
             temp = copy[i];
             copy[i] = copy[min_index];
             copy[min_index] = temp;
