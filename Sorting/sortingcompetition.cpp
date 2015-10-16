@@ -21,6 +21,16 @@ SortingCompetition::SortingCompetition(const string& inputFileName)
 
 }
 
+SortingCompetition::~SortingCompetition(){
+    for(int i = 0; i < listSize; i++){
+        delete[] copy[i];
+        delete[] wordList[i];
+    }
+    delete[] copy;
+    delete[] wordList;
+    delete[] buffer;
+}
+
 void SortingCompetition::setFileName(const string& inputFileName)
 {
 
@@ -68,8 +78,9 @@ bool SortingCompetition::prepareData()
 
 void SortingCompetition::sortData()
 {
-    //mergeSort(0, listSize-1);
-    //quickSortPivotLast(0, listSize-1);
+    //quickSortMedOfThree(0, listSize-1);
+    //mergeSort(copy, 0, listSize-1);
+    quickSortPivotLast(0, listSize-1);
     //selectionSort();
     //bubbleSort();
 }
@@ -116,10 +127,10 @@ void SortingCompetition::quickSortPivotLast(int l, int h){
 }
 
 int SortingCompetition::partitionPivotLast(int low, int high){
-    //sets pivot to last index
     char* pivot = copy[high];
     //varibles that will be used
     char* firstTemp;
+
     int left = low-1;
 
     for(int right = low; right < high; right++){
@@ -145,62 +156,81 @@ int SortingCompetition::partitionPivotLast(int low, int high){
     return left+1;
 }
 
-void SortingCompetition::mergeSort(int l, int h){
+void SortingCompetition::quickSortMedOfThree(int l, int h){
+    //tests to see if lowest index is less than highest
     if(l < h){
-        int middle = l+(h-l)/2;
-        mergeSort(l, middle);
-        mergeSort(middle+1, h);
-        merge(l ,middle, h);
+        //sends indexs to partition and returns the pivot index
+        int p = partitionMedOfThree(l, h);
+        //recursive call to quicksort for both sides of pivot
+        quickSortPivotLast(l, p-1);
+        quickSortPivotLast(p+1, h);
     }
 }
 
-void SortingCompetition::merge(int left, int middle, int right){
-    int i;
-    int j;
-    int k;
-    int n1 = middle - left + 1;
-    int n2 = right - middle;
-    char** tempL = new char*[n1];
-    char** tempR = new char* [n2];
+int SortingCompetition::partitionMedOfThree(int low, int high){
+    int pivotIndex = medianOfThree(low, high);
+    char* temp;
+    char* pivot = copy[pivotIndex];
+    copy[pivotIndex] = copy[high];
+    copy[high] = pivot;
 
-    for(i = 0; i < n1; i++)
-        tempL[i] = copy[left+i];
-    for(j = 0; j < n2; j++)
-        tempR[j] = copy[middle + 1 + j];
+    int j = low;
+    int k = high-1;
 
-    i = 0;
-    j = 0;
-    k = 1;
-
-    while(i < n1 && j < n2){
-        if(strlen(tempL[i]) < strlen(tempR[j])){
-            copy[k] = tempL[i];
-            i++;
-        }
-        if(strlen(tempL[i]) > strlen(tempR[j])){
-            copy[k] = tempR[j];
+    while(j < k){
+        while(strlen(copy[j]) < strlen(pivot))
             j++;
-        }
-        if(strlen(tempL[i]) == strlen(tempR[j])){
-            if(strcmp(tempL[i], tempR[j]) < 0){
-                copy[k] = tempL[i];
-                i++;
-            } else{
-                copy[k] = tempR[j];
+        while(strlen(copy[j]) == strlen(pivot)){
+            if(strcmp(copy[j], pivot) <= 0)
                 j++;
+        }
+        while(strlen(copy[k]) > strlen(pivot))
+            k--;
+        while(strlen(copy[k]) == strlen(pivot)){
+            if(strcmp(copy[k], pivot) >= 0)
+                k--;
+        }
+        if(j < k){
+            temp = copy[j];
+            copy[j] = copy[k];
+            copy[k] = temp;
+        }
+    }
+    copy[high] = copy[k];
+    copy[k] = pivot;
+    return k;
+}
+
+int SortingCompetition::medianOfThree(int firstVal, int lastVal){
+    char* tempArry[3];
+    int tempInt[3];
+    if(lastVal-firstVal >= 2){
+        int temp;
+        tempInt[0] = firstVal;
+        tempInt[1] = firstVal+(lastVal-firstVal)/2;
+        tempInt[2] = lastVal;
+        tempArry[0] = copy[tempInt[0]];
+        tempArry[1] = copy[tempInt[1]];
+        tempArry[2] = copy[tempInt[2]];
+        for(int i = 0; i < 1; i++){
+            for(int j = 1; j < 2; j++){
+                if(strlen(tempArry[i]) < strlen(tempArry[j])){
+                    temp = tempInt[i];
+                    tempInt[i] = tempInt[j];
+                    tempInt[j] = temp;
+                }
+                if(strlen(tempArry[i]) < strlen(tempArry[j])){
+                    if(strcmp(tempArry[i],tempArry[j]) < 0){
+                        temp = tempInt[i];
+                        tempInt[i] = tempInt[j];
+                        tempInt[j] = temp;
+                    }
+                }
             }
         }
-        k++;
-    }
-    while(i < n1){
-        copy[k] = tempL[i];
-        i++;
-        k++;
-    }
-    while(j < n2){
-        copy[k] = tempR[j];
-        j++;
-        k++;
+        return tempInt[1];
+    } else{
+        return lastVal;
     }
 }
 
@@ -266,3 +296,62 @@ void SortingCompetition::addWord(char *&word, int wordNum){
     strcpy(wordList[wordNum],word);
     wordList[wordNum][strlen(word)] = '\0';
 }
+
+/*void SortingCompetition::mergeSort(int l, int h){
+    if(l < h){
+        int middle = l+(h-l)/2;
+        mergeSort(l, middle);
+        mergeSort(middle+1, h);
+        merge(l ,middle, h);
+    }
+}
+
+void SortingCompetition::merge(int left, int middle, int right){
+    int i;
+    int j;
+    int k;
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+    char** tempL = new char*[n1];
+    char** tempR = new char* [n2];
+
+    for(i = 0; i < n1; i++)
+        tempL[i] = copy[left+i];
+    for(j = 0; j < n2; j++)
+        tempR[j] = copy[middle + 1 + j];
+
+    i = 0;
+    j = 0;
+    k = 1;
+
+    while(i < n1 && j < n2){
+        if(strlen(tempL[i]) < strlen(tempR[j])){
+            copy[k] = tempL[i];
+            i++;
+        }
+        if(strlen(tempL[i]) > strlen(tempR[j])){
+            copy[k] = tempR[j];
+            j++;
+        }
+        if(strlen(tempL[i]) == strlen(tempR[j])){
+            if(strcmp(tempL[i], tempR[j]) < 0){
+                copy[k] = tempL[i];
+                i++;
+            } else{
+                copy[k] = tempR[j];
+                j++;
+            }
+        }
+        k++;
+    }
+    while(i < n1){
+        copy[k] = tempL[i];
+        i++;
+        k++;
+    }
+    while(j < n2){
+        copy[k] = tempR[j];
+        j++;
+        k++;
+    }
+}*/

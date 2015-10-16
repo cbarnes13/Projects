@@ -24,6 +24,7 @@ public:
 private:
 
     string fileName;
+    ~SortingCompetition();
     char** wordList;
     char** copy;
     char* buffer;
@@ -33,10 +34,14 @@ private:
     void bubbleSort();
     void quickSortPivotLast(int l, int h);
     int partitionPivotLast(int low, int high);
-    void mergeSort(int l, int h);
-    void merge(int left, int middle, int right);
+    void quickSortMedOfThree(int l, int h);
+    int partitionMedOfThree(int low, int high);
+    //void mergeSort(int l, int h);
+    //void merge(int left, int middle, int right);
     void selectionSort();
-    void mergeSort();
+    int medianOfThree(int firstVal, int lastVal);
+    //void merge(char** &charArr, int lhs, int mid,int rhs);
+    //void mergeSort(char** &charArr, int lhs, int rhs);
 };
 
 
